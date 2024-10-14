@@ -19,7 +19,6 @@ PIP_PACKAGES=(
 )
 
 NODES=(
-    "https://github.com/ltdrdata/ComfyUI-Impact-Pack"
     "https://github.com/chrisgoringe/cg-use-everywhere"
     "https://github.com/kijai/ComfyUI-KJNodes"
 )
@@ -52,12 +51,38 @@ CONTROLNET_MODELS=(
 
 ### DO NOT EDIT BELOW HERE UNLESS YOU KNOW WHAT YOU ARE DOING ###
 
+# Add the manual installation steps for ComfyUI-Impact-Pack.
+function install_comfyui_impact_pack() {
+    local custom_nodes_dir="/opt/ComfyUI/custom_nodes"
+    local impact_pack_dir="${custom_nodes_dir}/ComfyUI-Impact-Pack"
+    
+    # Clone the ComfyUI-Impact-Pack repository
+    if [[ ! -d "$impact_pack_dir" ]]; then
+        printf "Cloning ComfyUI-Impact-Pack...\n"
+        git clone https://github.com/ltdrdata/ComfyUI-Impact-Pack.git "$impact_pack_dir"
+        
+        # Optional: Clone the subpack
+        printf "Cloning ComfyUI-Impact-Subpack...\n"
+        git clone https://github.com/ltdrdata/ComfyUI-Impact-Subpack.git "${impact_pack_dir}/impact_subpack"
+    else
+        printf "ComfyUI-Impact-Pack already cloned.\n"
+    fi
+
+    # Run the install-manual script (optional)
+    if [[ -f "${impact_pack_dir}/install-manual.py" ]]; then
+        printf "Running install-manual.py...\n"
+        (cd "$impact_pack_dir" && python3 install-manual.py)
+    fi
+}
+
 function provisioning_start() {
     if [[ ! -d /opt/environments/python ]]; then 
         export MAMBA_BASE=true
     fi
     source /opt/ai-dock/etc/environment.sh
     source /opt/ai-dock/bin/venv-set.sh comfyui
+
+    install_comfyui_impact_pack
 
     # Get licensed models if HF_TOKEN set & valid
     if provisioning_has_valid_hf_token; then

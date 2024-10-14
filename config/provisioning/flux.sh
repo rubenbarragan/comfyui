@@ -19,9 +19,9 @@ PIP_PACKAGES=(
 )
 
 NODES=(
-    "ComfyUI Impact Pack"
-    "Use Everywhere (UE Nodes)"
-    "KJNodes for ComfyUI"
+    "https://github.com/ltdrdata/ComfyUI-Impact-Pack"
+    "https://github.com/chrisgoringe/cg-use-everywhere"
+    "https://github.com/kijai/ComfyUI-KJNodes"
 )
 
 CHECKPOINT_MODELS=(
